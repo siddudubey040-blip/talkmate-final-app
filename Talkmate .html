@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TalkMate - Connect, Chat & Belong</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0e2a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            padding-bottom: 65px;
+            color: white;
+        }
+        
+        /* Auth Pages */
+        .auth-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0e2a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+        
+        .auth-container {
+            background: #111637;
+            padding: 35px;
+            border-radius: 28px;
+            max-width: 350px;
+            width: 90%;
+            border: 1px solid #1e2a5e;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            background: #0f1438;
+            border: 1px solid #1e2a5e;
+            border-radius: 16px;
+            color: white;
+            font-size: 16px;
+        }
+        
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            padding: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 8px 0;
+            font-size: 16px;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #3b82f6;
+            color: #60a5fa;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .error { color: #ef4444; text-align: center; margin: 10px 0; }
+        .success { color: #10b981; text-align: center; margin: 10px 0; }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #111637;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 12px;
+            border-top: 1px solid #1e2a5e;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            text-align: center;
+            background: none;
+            border: none;
+            color: #8b9bcf;
+            cursor: pointer;
+            transition: 0.2s;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-item.active {
+            color: #60a5fa;
+            background: rgba(96, 165, 250, 0.1);
+        }
+        
+        .nav-icon {
+            font-size: 22px;
+        }
+        
+        /* Pages */
+        .page {
+            display: none;
+            padding: 16px;
+            padding-bottom: 75px;
+        }
+        
+        .active-page {
+            display: block;
+        }
+        
+        /* Gender Colors */
+        .gender-male { color: #3b82f6; font-weight: bold; }
+        .gender-female { color: #ec489a; font-weight: bold; }
+        .gender-other { color: #a855f7; font-weight: bold; }
+        .gender-icon { font-size: 14px; margin-left: 4px; }
+        
+        /* Stories */
+        .stories-container {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin-bottom: 16px;
+        }
+        
+        .story-item {
+            text-align: center;
+            min-width: 68px;
+            cursor: pointer;
+        }
+        
+        .story-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #a855f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+            padding: 2px;
+        }
+        
+        .story-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #0f1438;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            overflow: hidden;
+        }
+        
+        .story-name {
+            font-size: 10px;
+            color: #8b9bcf;
+        }
+        
+        /* Post Card */
+        .post-card {
+            background: #111637;
+            border-radius: 18px;
+            padding: 14px;
+            margin-bottom: 14px;
+            border: 1px solid #1e2a5e;
+        }
+        
+        .post-header {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .post-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #a855f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            overflow: hidden;
+        }
+        
+        .post-user {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .post-username {
+            font-size: 11px;
+            color: #8b9bcf;
+        }
+        
+        .post-time {
+            font-size: 10px;
+            color: #6b7280;
+        }
+        
+        .post-content {
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        
+        .post-media {
+            width: 100%;
+            border-radius: 14px;
+            margin-top: 10px;
+            max-height: 350px;
+            object-fit: cover;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #1e2a5e;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: #8b9bcf;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            width: auto;
+            padding: 4px 10px;
+            border-radius: 18px;
+        }
+        
+        /* Create Post */
+        .create-post {
+            background: #111637;
+            border-radius: 18px;
+            padding: 14px;
+            margin-bottom: 16px;
+            border: 1px solid #1e2a5e;
+        }
+        
+        .create-post textarea {
+            width: 100%;
+            background: #0f1438;
+            border: 1px solid #1e2a5e;
+            border-radius: 14px;
+            padding: 12px;
+            color: white;
+            font-size: 13px;
+            resize: none;
+        }
+        
+        .upload-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .upload-btn {
+            background: #0f1438;
+            padding: 8px;
+            border-radius: 25px;
+            text-align: center;
+            flex: 1;
+            cursor: pointer;
+            font-size: 12px;
+            border: 1px solid #1e2a5e;
+        }
+        
+        /* Home Room Icon */
+        .home-room-icon {
+            background: #111637;
+            border-radius: 18px;
+            padding: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #1e2a5e;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        
+        .room-icon-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .room-badge {
+            background: #3b82f6;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+        }
+        
+        /* Rooms Page */
+        .room-card {
+            background: #111637;
+            border-radius: 18px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid #1e2a5e;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .room-card:hover {
+            border-color: #3b82f6;
+        }
+        
+        .room-name {
+            font-weight: bold;
+            font-size: 15px;
+        }
+        
+        .room-members {
+            font-size: 11px;
+            color: #8b9bcf;
+        }
+        
+        /* Chat */
+        .chat-user {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #1e2a5e;
+            cursor: pointer;
+        }
+        
+        .chat-preview {
+            font-size: 12px;
+            color: #8b9bcf;
+            margin-top: 3px;
+        }
+        
+        .chat-area {
+            height: 55vh;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .chat-bubble {
+            max-width: 75%;
+            padding: 8px 12px;
+            border-radius: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .chat-bubble.me {
+            background: #3b82f6;
+            margin-left: auto;
+        }
+        
+        .chat-bubble.other {
+            background: #0f1438;
+        }
+        
+        /* Premium */
+        .premium-card {
+            background: #111637;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 14px;
+            border: 1px solid #1e2a5e;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .premium-price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #60a5fa;
+        }
+        
+        /* Profile */
+        .profile-header {
+            text-align: center;
+            padding: 16px;
+        }
+        
+        .profile-avatar-large {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #a855f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 36px;
+            font-weight: bold;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 15px 0;
+        }
+        
+        .stat-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #60a5fa;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #8b9bcf;
+        }
+        
+        .profile-bio {
+            font-size: 13px;
+            color: #8b9bcf;
+            margin: 8px 0;
+        }
+        
+        .edit-profile-btn {
+            background: #0f1438;
+            border: 1px solid #1e2a5e;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: inline-block;
+            margin: 5px;
+        }
+        
+        .settings-btn {
+            background: #0f1438;
+            border: 1px solid #1e2a5e;
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: inline-block;
+            margin: 5px;
+        }
+        
+        /* Settings Modal - Naya Design */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #111637;
+            border-radius: 24px;
+            padding: 25px;
+            max-width: 350px;
+            width: 90%;
+            border: 1px solid #1e2a5e;
+        }
+        
+        .settings-modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .settings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .settings-option-card {
+            background: #0f1438;
+            border-radius: 16px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #1e2a5e;
+        }
+        
+        .settings-option-card:hover {
+            background: #1a2350;
+            border-color: #3b82f6;
+            transform: translateX(5px);
+        }
+        
+        .settings-option-icon {
+            font-size: 28px;
+            width: 45px;
+            text-align: center;
+        }
+        
+        .settings-option-info {
+            flex: 1;
+        }
+        
+        .settings-option-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .settings-option-desc {
+            font-size: 11px;
+            color: #8b9bcf;
+        }
+        
+        .settings-option-arrow {
+            font-size: 20px;
+            color: #4a5568;
+        }
+        
+        .logout-option {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        .logout-option:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+        }
+        
+        .logout-option .settings-option-name {
+            color: #ef4444;
+        }
+        
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .premium-badge {
+            background: #10b981;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+        }
+        
+        .limit-alert {
+            background: #ef4444;
+            padding: 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="auth-page">
+    <div class="auth-container">
+        <div class="logo">💬 TalkMate</div>
+        <div id="loginError" class="error"></div>
+        <input type="email" id="loginEmail" placeholder="Email" value="demo@talkmate.com">
+        <input type="password" id="loginPassword" placeholder="Password" value="123">
+        <button onclick="doLogin()">Login</button>
+        <button onclick="showSignup()" class="btn-outline">Create Account</button>
+        <p style="text-align:center; margin-top:15px; font-size:12px;">demo@talkmate.com / 123</p>
+    </div>
+</div>
+
+<!-- SIGNUP PAGE -->
+<div id="signupPage" class="auth-page" style="display:none">
+    <div class="auth-container">
+        <div class="logo">✨ TalkMate</div>
+        <div id="signupError" class="error"></div>
+        <div id="signupSuccess" class="success"></div>
+        <input type="text" id="signupName" placeholder="Full Name">
+        <input type="email" id="signupEmail" placeholder="Email">
+        <input type="password" id="signupPassword" placeholder="Password (min 3)">
+        <select id="signupGender">
+            <option value="male">👨 Male</option>
+            <option value="female">👩 Female</option>
+            <option value="other">🌈 Other</option>
+        </select>
+        <button onclick="doSignup()">Sign Up</button>
+        <button onclick="showLogin()" class="btn-outline">Back to Login</button>
+    </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div id="paymentModal" class="modal">
+    <div class="modal-content">
+        <h3>💳 Payment</h3>
+        <div id="paymentStatus"></div>
+        <p style="margin:15px 0">UPI: <strong style="color:#60a5fa">talkmate@okhdfcbank</strong></p>
+        <button onclick="copyUPI()">📋 Copy UPI ID</button>
+        <button onclick="verifyPayment()" style="background:#10b981; margin-top:10px">✅ Payment Done</button>
+        <button onclick="closePaymentModal()" class="btn-outline">Cancel</button>
+    </div>
+</div>
+
+<!-- SETTINGS MODAL - New Design -->
+<div id="settingsModal" class="modal">
+    <div class="modal-content">
+        <div class="settings-modal-title">⚙️ Settings</div>
+        <div class="settings-list">
+            <div class="settings-option-card" onclick="closeSettingsModal(); showPrivacy()">
+                <div class="settings-option-icon">🔒</div>
+                <div class="settings-option-info">
+                    <div class="settings-option-name">Privacy Policy</div>
+                    <div class="settings-option-desc">Read our privacy policy</div>
+                </div>
+                <div class="settings-option-arrow">→</div>
+            </div>
+            <div class="settings-option-card" onclick="closeSettingsModal(); showTerms()">
+                <div class="settings-option-icon">📜</div>
+                <div class="settings-option-info">
+                    <div class="settings-option-name">Terms & Conditions</div>
+                    <div class="settings-option-desc">Terms of service</div>
+                </div>
+                <div class="settings-option-arrow">→</div>
+            </div>
+            <div class="settings-option-card" onclick="closeSettingsModal(); showAbout()">
+                <div class="settings-option-icon">ℹ️</div>
+                <div class="settings-option-info">
+                    <div class="settings-option-name">About TalkMate</div>
+                    <div class="settings-option-desc">Version 2.0.0</div>
+                </div>
+                <div class="settings-option-arrow">→</div>
+            </div>
+            <div class="settings-option-card" onclick="closeSettingsModal(); showHelp()">
+                <div class="settings-option-icon">❓</div>
+                <div class="settings-option-info">
+                    <div class="settings-option-name">Help & Support</div>
+                    <div class="settings-option-desc">FAQ and contact us</div>
+                </div>
+                <div class="settings-option-arrow">→</div>
+            </div>
+            <div class="settings-option-card logout-option" onclick="closeSettingsModal(); confirmLogout()">
+                <div class="settings-option-icon">🚪</div>
+                <div class="settings-option-info">
+                    <div class="settings-option-name">Logout</div>
+                    <div class="settings-option-desc">Sign out from your account</div>
+                </div>
+                <div class="settings-option-arrow">→</div>
+            </div>
+        </div>
+        <button onclick="closeSettingsModal()" class="btn-outline">Close</button>
+    </div>
+</div>
+
+<!-- CONFIRM LOGOUT MODAL -->
+<div id="confirmModal" class="modal">
+    <div class="modal-content">
+        <h3>🚪 Logout</h3>
+        <p>Are you sure you want to logout?</p>
+        <div class="flex-between" style="gap: 10px;">
+            <button onclick="confirmLogoutAction()" style="background:#ef4444; margin:0">Yes</button>
+            <button onclick="closeConfirmModal()" class="btn-outline" style="margin:0">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" style="display:none">
+    
+    <!-- HOME PAGE -->
+    <div id="homePage" class="page active-page">
+        <div class="stories-container" id="storiesList"></div>
+        
+        <div class="home-room-icon" onclick="showPage('roomsPage')">
+            <div class="room-icon-left">
+                <span style="font-size:28px">🏠</span>
+                <div>
+                    <div style="font-weight:bold">Community Rooms</div>
+                    <div style="font-size:11px; color:#8b9bcf">Join and connect with others</div>
+                </div>
+            </div>
+            <div class="room-badge">Explore →</div>
+        </div>
+        
+        <div class="create-post">
+            <textarea id="postTextInput" rows="2" placeholder="Kya soch rahe ho?"></textarea>
+            <div class="upload-bar">
+                <div class="upload-btn" onclick="document.getElementById('postPhoto').click()">📷 Photo</div>
+                <div class="upload-btn" onclick="document.getElementById('postVideo').click()">🎥 Video</div>
+                <div class="upload-btn" onclick="document.getElementById('postMusicInput').click()">🎵 Music</div>
+            </div>
+            <input type="file" id="postPhoto" accept="image/*" style="display:none">
+            <input type="file" id="postVideo" accept="video/*" style="display:none">
+            <input type="file" id="postMusicInput" accept="audio/*" style="display:none">
+            <div id="postPreviewArea"></div>
+            <button onclick="uploadNewPost()" style="margin-top:10px">📤 Post</button>
+        </div>
+        
+        <div id="feedContainer"></div>
+    </div>
+    
+    <!-- SEARCH PAGE -->
+    <div id="searchPage" class="page">
+        <div style="background:#0f1438; border-radius:25px; padding:10px 16px; margin-bottom:16px">
+            <input type="text" id="searchInput" placeholder="🔍 Dhundo..." style="background:none; border:none; color:white; width:100%">
+        </div>
+        <div class="suggested-title">Suggest kiye gaye log</div>
+        <div id="searchResults"></div>
+    </div>
+    
+    <!-- CHAT PAGE -->
+    <div id="chatPage" class="page">
+        <div id="chatUsersList"></div>
+        <div id="chatArea" style="display:none">
+            <div class="flex-between" style="margin-bottom:12px">
+                <h3 id="chatUserName" style="font-size:18px"></h3>
+                <button onclick="closeChat()" style="width:auto; padding:6px 14px;">← Back</button>
+            </div>
+            <div id="chatLimitAlert" class="limit-alert" style="display:none"></div>
+            <div id="chatMessages" class="chat-area"></div>
+            <div class="upload-bar" style="margin-top:8px">
+                <input type="text" id="chatInput" placeholder="Type a message..." style="flex:1; background:#0f1438; border:1px solid #1e2a5e; border-radius:25px; padding:10px; color:white">
+                <button onclick="sendChatMsg()" style="width:auto; padding:10px 18px;">Send</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ROOMS PAGE -->
+    <div id="roomsPage" class="page">
+        <div class="flex-between" style="margin-bottom:16px">
+            <h2>🏠 Rooms</h2>
+            <button onclick="showCreateRoomModal()" style="width:auto; padding:8px 16px;">+ Create</button>
+        </div>
+        <div id="roomsList"></div>
+    </div>
+    
+    <!-- PREMIUM PAGE -->
+    <div id="subscriptionPage" class="page">
+        <div class="premium-card" style="cursor:default">
+            <h2>⭐ TalkMate Premium</h2>
+            <p style="color:#8b9bcf; font-size:12px">Unlimited Messages + Photo/Video in Chat</p>
+        </div>
+        <div class="premium-card" onclick="openPayment(25, '15 Days')">
+            <div class="premium-price">₹25</div>
+            <div>15 Days - Unlimited Chat</div>
+        </div>
+        <div class="premium-card" onclick="openPayment(50, '30 Days')">
+            <div class="premium-price">₹50</div>
+            <div>30 Days - Unlimited Chat</div>
+        </div>
+        <div class="premium-card" onclick="openPayment(90, '60 Days')">
+            <div class="premium-price">₹90</div>
+            <div>60 Days - Unlimited Chat</div>
+        </div>
+        <div class="premium-card" onclick="openPayment(300, '6 Months')">
+            <div class="premium-price">₹300</div>
+            <div>6 Months - Unlimited Chat</div>
+        </div>
+        <div id="subStatus" style="text-align:center; margin-top:12px"></div>
+    </div>
+    
+    <!-- PROFILE PAGE -->
+    <div id="profilePage" class="page">
+        <div id="profileContent"></div>
+    </div>
+</div>
+
+<!-- BOTTOM NAVIGATION -->
+<div class="bottom-nav" id="bottomNav" style="display:none">
+    <button class="nav-item" onclick="showPage('homePage')">🏠</button>
+    <button class="nav-item" onclick="showPage('searchPage')">🔍</button>
+    <button class="nav-item" onclick="showPage('chatPage')">💬</button>
+    <button class="nav-item" onclick="showPage('roomsPage')">🏠</button>
+    <button class="nav-item" onclick="showPage('subscriptionPage')">⭐</button>
+    <button class="nav-item" onclick="showPage('profilePage')">👤</button>
+</div>
+
+<!-- CREATE ROOM MODAL -->
+<div id="createRoomModal" class="modal">
+    <div class="modal-content">
+        <h3>🏠 Create New Room</h3>
+        <input type="text" id="newRoomName" placeholder="Room Name" style="margin:15px 0">
+        <textarea id="newRoomDesc" placeholder="Room Description" rows="2"></textarea>
+        <button onclick="createRoom()" style="background:#10b981">Create Room</button>
+        <button onclick="closeCreateRoomModal()" class="btn-outline">Cancel</button>
+    </div>
+</div>
+
+<!-- EDIT PROFILE MODAL -->
+<div id="editProfileModal" class="modal">
+    <div class="modal-content">
+        <h3>✏️ Edit Profile</h3>
+        <div id="editAvatarPreview" style="width:80px; height:80px; border-radius:50%; background:#0f1438; margin:0 auto 15px; display:flex; align-items:center; justify-content:center; font-size:32px; cursor:pointer; overflow:hidden">📷</div>
+        <input type="file" id="editAvatarInput" accept="image/*" style="display:none">
+        <input type="text" id="editName" placeholder="Name">
+        <textarea id="editBio" placeholder="Bio" rows="2"></textarea>
+        <select id="editGender">
+            <option value="male">👨 Male</option>
+            <option value="female">👩 Female</option>
+            <option value="other">🌈 Other</option>
+        </select>
+        <div class="flex-between" style="gap:10px; margin-top:15px">
+            <button onclick="saveProfileChanges()" style="background:#10b981">Save</button>
+            <button onclick="closeEditModal()" class="btn-outline">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ============ DATABASE ============
+    const FREE_MSG_LIMIT = 30;
+    let users = [
+        { id: 1, name: "Riya Sharma", username: "@riya_s", email: "riya@talkmate.com", password: "123", avatar: "RS", avatarImg: null, bio: "Art lover 🌸", gender: "female", followers: 234, following: 120, isPremium: false, premiumExpiry: null, msgCount: 0 },
+        { id: 2, name: "Priya Nair", username: "@priya_n", email: "priya@talkmate.com", password: "123", avatar: "PN", avatarImg: null, bio: "Travel blogger ✈️", gender: "female", followers: 512, following: 200, isPremium: true, premiumExpiry: Date.now() + 30*24*60*60*1000, msgCount: 0 },
+        { id: 3, name: "Demo User", username: "@demo", email: "demo@talkmate.com", password: "123", avatar: "DU", avatarImg: null, bio: "Welcome to TalkMate! 🎉", gender: "other", followers: 10, following: 5, isPremium: false, premiumExpiry: null, msgCount: 0 }
+    ];
+    
+    let posts = [
+        { id: 1, userId: 1, text: "Aaj ka sunset bahut beautiful tha 😍✨", music: "Teri Mitti - B Praak", image: null, video: null, time: "1h ago", likes: 234, comments: 18, views: 1240 },
+        { id: 2, userId: 2, text: "Naya artwork ready! Kya lagta hai? 😍✨", music: null, image: null, video: null, time: "3h ago", likes: 512, comments: 43, views: 890 }
+    ];
+    
+    let stories = [];
+    let chats = [];
+    let rooms = [
+        { id: 1, name: "💑 Couple Zone", description: "For couples only", members: 234 },
+        { id: 2, name: "🎨 Art Lovers", description: "Share your creativity", members: 567 },
+        { id: 3, name: "💻 Tech Talks", description: "Programming and tech", members: 890 }
+    ];
+    
+    let currentUser = null;
+    let activeChat = null;
+    let postMediaData = null, postMediaType = null, postMusicData = null;
+    let storyMediaData = null, storyMediaType = null;
+    let tempAvatarData = null;
+    
+    function getGenderIcon(gender) {
+        if(gender === 'male') return '<span class="gender-male gender-icon">♂</span>';
+        if(gender === 'female') return '<span class="gender-female gender-icon">♀</span>';
+        return '<span class="gender-other gender-icon">⚧</span>';
+    }
+    
+    function saveData() {
+        localStorage.setItem('talkmate_users', JSON.stringify(users));
+        localStorage.setItem('talkmate_posts', JSON.stringify(posts));
+        localStorage.setItem('talkmate_stories', JSON.stringify(stories));
+        localStorage.setItem('talkmate_chats', JSON.stringify(chats));
+        localStorage.setItem('talkmate_rooms', JSON.stringify(rooms));
+        if(currentUser) localStorage.setItem('talkmate_current', JSON.stringify(currentUser));
+    }
+    
+    function loadData() {
+        let u = localStorage.getItem('talkmate_users');
+        let p = localStorage.getItem('talkmate_posts');
+        let s = localStorage.getItem('talkmate_stories');
+        let c = localStorage.getItem('talkmate_chats');
+        let r = localStorage.getItem('talkmate_rooms');
+        let cu = localStorage.getItem('talkmate_current');
+        if(u) users = JSON.parse(u);
+        if(p) posts = JSON.parse(p);
+        if(s) stories = JSON.parse(s);
+        if(c) chats = JSON.parse(c);
+        if(r) rooms = JSON.parse(r);
+        if(cu) currentUser = JSON.parse(cu);
+        checkExpiredPremium();
+    }
+    
+    function checkExpiredPremium() {
+        if(currentUser && currentUser.premiumExpiry && Date.now() > currentUser.premiumExpiry) {
+            currentUser.isPremium = false;
+            currentUser.premiumExpiry = null;
+            saveData();
+        }
+    }
+    
+    function getUser(id) { return users.find(u => u.id === id); }
+    
+    function canSendMessage() {
+        if(currentUser.isPremium) return true;
+        return currentUser.msgCount < FREE_MSG_LIMIT;
+    }
+    
+    function incrementMsgCount() {
+        if(!currentUser.isPremium) {
+            currentUser.msgCount++;
+            saveData();
+            updateMsgLimitAlert();
+        }
+    }
+    
+    function updateMsgLimitAlert() {
+        let alertDiv = document.getElementById('chatLimitAlert');
+        if(!currentUser.isPremium && activeChat) {
+            let remaining = FREE_MSG_LIMIT - currentUser.msgCount;
+            if(remaining <= 0) {
+                alertDiv.innerHTML = `❌ Free limit reached! <span style="color:#60a5fa; cursor:pointer" onclick="showPage('subscriptionPage')">Upgrade to Premium</span> for unlimited chat.`;
+                alertDiv.style.display = 'block';
+            } else if(remaining <= 5) {
+                alertDiv.innerHTML = `⚠️ Only ${remaining} free messages left! Upgrade to Premium for unlimited.`;
+                alertDiv.style.display = 'block';
+            } else {
+                alertDiv.style.display = 'none';
+            }
+        } else {
+            alertDiv.style.display = 'none';
+        }
+    }
+    
+    // Settings Modal Functions
+    function openSettingsModal() { document.getElementById('settingsModal').classList.add('active'); }
+    function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('active'); }
+    
+    function showPrivacy() { alert("🔒 Privacy Policy\n\nWe value your privacy. Your data is safe with us."); }
+    function showTerms() { alert("📜 Terms & Conditions\n\nRespect others, no spamming, and enjoy connecting!"); }
+    function showAbout() { alert("ℹ️ About TalkMate\n\nVersion: 2.0.0\nConnect, Chat & Belong"); }
+    function showHelp() { alert("❓ Help & Support\n\nEmail: support@talkmate.com"); }
+    
+    function confirmLogout() { closeSettingsModal(); document.getElementById('confirmModal').classList.add('active'); }
+    function closeConfirmModal() { document.getElementById('confirmModal').classList.remove('active'); }
+    function confirmLogoutAction() { closeConfirmModal(); logout(); }
+    
+    // Rooms Functions
+    function showCreateRoomModal() { document.getElementById('createRoomModal').classList.add('active'); }
+    function closeCreateRoomModal() { document.getElementById('createRoomModal').classList.remove('active'); }
+    
+    function createRoom() {
+        let name = document.getElementById('newRoomName').value.trim();
+        let desc = document.getElementById('newRoomDesc').value.trim();
+        if(!name) { alert("Please enter room name!"); return; }
+        rooms.push({ id: rooms.length+1, name: name, description: desc || "New room", members: 1 });
+        saveData();
+        closeCreateRoomModal();
+        renderRooms();
+        alert(`✅ Room "${name}" created!`);
+    }
+    
+    function renderRooms() {
+        let container = document.getElementById('roomsList');
+        if(!container) return;
+        if(rooms.length === 0) { container.innerHTML = '<div style="text-align:center; color:#888; padding:20px">No rooms yet</div>'; return; }
+        container.innerHTML = '';
+        rooms.forEach(room => {
+            container.innerHTML += `
+                <div class="room-card" onclick="joinRoom(${room.id})">
+                    <div><div class="room-name">${room.name}</div><div class="room-members">👥 ${room.members} members • ${room.description}</div></div>
+                    <div class="room-badge">Join →</div>
+                </div>
+            `;
+        });
+    }
+    
+    function joinRoom(roomId) { let room = rooms.find(r => r.id === roomId); alert(`🎉 Joined "${room.name}" room!`); }
+    
+    // Payment Functions
+    function openPayment(amount, plan) { pendingPlan = plan; pendingAmount = amount; document.getElementById('paymentModal').classList.add('active'); document.getElementById('paymentStatus').innerHTML = `<p>Pay ₹${amount} for ${plan}</p>`; }
+    function closePaymentModal() { document.getElementById('paymentModal').classList.remove('active'); pendingPlan = null; pendingAmount = null; }
+    function copyUPI() { navigator.clipboard.writeText("talkmate@okhdfcbank"); alert("UPI ID copied!"); }
+    
+    function verifyPayment() {
+        if(!pendingPlan) return;
+        if(confirm(`Payment kar diya ₹${pendingAmount} for ${pendingPlan}?`)) {
+            let days = pendingPlan === '15 Days' ? 15 : (pendingPlan === '30 Days' ? 30 : (pendingPlan === '60 Days' ? 60 : 180));
+            currentUser.isPremium = true;
+            currentUser.premiumExpiry = Date.now() + (days * 24 * 60 * 60 * 1000);
+            currentUser.msgCount = 0;
+            saveData();
+            closePaymentModal();
+            document.getElementById('subStatus').innerHTML = `<span style="color:#10b981">✅ Premium Activated! Unlimited chat unlocked!</span>`;
+            updateMsgLimitAlert();
+            alert(`🎉 Premium Activated! Unlimited messages!`);
+            pendingPlan = null; pendingAmount = null;
+        }
+    }
+    
+    // Edit Profile
+    function openEditProfile() {
+        document.getElementById('editName').value = currentUser.name;
+        document.getElementById('editBio').value = currentUser.bio || '';
+        document.getElementById('editGender').value = currentUser.gender;
+        let previewDiv = document.getElementById('editAvatarPreview');
+        if(currentUser.avatarImg) { previewDiv.innerHTML = `<img src="${currentUser.avatarImg}" style="width:100%; height:100%; object-fit:cover">`; }
+        else { previewDiv.innerHTML = `<span>${currentUser.avatar}</span>`; }
+        document.getElementById('editProfileModal').classList.add('active');
+        document.getElementById('editAvatarInput').onchange = function(e) {
+            let file = e.target.files[0];
+            if(file) {
+                let reader = new FileReader();
+                reader.onload = function(ev) {
+                    tempAvatarData = ev.target.result;
+                    previewDiv.innerHTML = `<img src="${tempAvatarData}" style="width:100%; height:100%; object-fit:cover">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+    }
+    
+    function closeEditModal() { document.getElementById('editProfileModal').classList.remove('active'); tempAvatarData = null; }
+    
+    function saveProfileChanges() {
+        let newName = document.getElementById('editName').value.trim();
+        let newBio = document.getElementById('editBio').value.trim();
+        let newGender = document.getElementById('editGender').value;
+        if(newName) currentUser.name = newName;
+        currentUser.bio = newBio;
+        currentUser.gender = newGender;
+        if(tempAvatarData) { currentUser.avatarImg = tempAvatarData; currentUser.avatar = newName.charAt(0).toUpperCase(); }
+        saveData();
+        closeEditModal();
+        renderProfile();
+        renderFeed();
+        alert("✅ Profile updated!");
+    }
+    
+    // Post Functions
+    function previewPostMedia(input, type) {
+        let file = input.files[0];
+        if(file) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                postMediaData = e.target.result;
+                postMediaType = type;
+                let html = type === 'photo' ? `<img src="${e.target.result}" style="max-width:100%; border-radius:14px; margin-top:8px; max-height:180px;">` : `<video src="${e.target.result}" controls style="max-width:100%; border-radius:14px; margin-top:8px; max-height:180px;"></video>`;
+                document.getElementById('postPreviewArea').innerHTML = html;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    function previewPostMusic(input) {
+        let file = input.files[0];
+        if(file) { postMusicData = file.name; document.getElementById('postPreviewArea').innerHTML += `<div class="post-music" style="margin-top:6px">🎵 ${file.name}</div>`; }
+    }
+    
+    function uploadNewPost() {
+        let text = document.getElementById('postTextInput').value.trim();
+        if(!text && !postMediaData) { alert("Write something!"); return; }
+        posts.push({ id: posts.length+1, userId: currentUser.id, text: text, music: postMusicData, image: postMediaType === 'photo' ? postMediaData : null, video: postMediaType === 'video' ? postMediaData : null, time: "just now", likes: 0, comments: 0, views: 0 });
+        document.getElementById('postTextInput').value = '';
+        postMediaData = null; postMediaType = null; postMusicData = null;
+        document.getElementById('postPreviewArea').innerHTML = '';
+        saveData(); renderFeed(); renderProfile();
+        alert("✅ Post shared!");
+    }
+    
+    // Story Functions
+    function openStoryUpload() {
+        let input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*,video/*';
+        input.onchange = function(e) {
+            let file = e.target.files[0];
+            if(file) {
+                let reader = new FileReader();
+                reader.onload = function(ev) {
+                    let type = file.type.startsWith('image') ? 'photo' : 'video';
+                    storyMediaData = ev.target.result;
+                    storyMediaType = type;
+                    let text = prompt("Write something (optional)");
+                    stories.push({ id: Date.now(), userId: currentUser.id, text: text || "", media: storyMediaData, mediaType: storyMediaType, timestamp: Date.now(), views: 0 });
+                    saveData(); renderStories();
+                    alert("✅ Story posted!");
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+        input.click();
+    }
+    
+    function viewStory(storyId) {
+        let story = stories.find(s => s.id === storyId);
+        if(story) {
+            story.views++;
+            saveData();
+            let user = getUser(story.userId);
+            alert(`${user.name}: ${story.text || 'Story'}`);
+        }
+    }
+    
+    function renderStories() {
+        let container = document.getElementById('storiesList');
+        if(!container) return;
+        stories = stories.filter(s => Date.now() - s.timestamp < 24*60*60*1000);
+        let seen = new Set(), unique = [];
+        for(let i=stories.length-1; i>=0; i--) { if(!seen.has(stories[i].userId)) { seen.add(stories[i].userId); unique.push(stories[i]); } }
+        container.innerHTML = '<div class="story-item" onclick="openStoryUpload()"><div class="story-circle"><div class="story-avatar">+</div></div><div class="story-name">Your Story</div></div>';
+        unique.forEach(s => { let user = getUser(s.userId); if(user) { container.innerHTML += `<div class="story-item" onclick="viewStory(${s.id})"><div class="story-circle"><div class="story-avatar">${user.avatarImg ? `<img src="${user.avatarImg}" style="width:100%; height:100%; object-fit:cover">` : user.avatar}</div></div><div class="story-name">${user.name.split(' ')[0]}</div></div>`; } });
+        saveData();
+    }
+    
+    function renderFeed() {
+        let container = document.getElementById('feedContainer');
+        if(!container) return;
+        if(posts.length === 0) { container.innerHTML = '<div style="color:#888; text-align:center">No posts yet</div>'; return; }
+        container.innerHTML = '';
+        [...posts].reverse().forEach(p => {
+            let user = getUser(p.userId);
+            if(user) {
+                let mediaHtml = '';
+                if(p.image) mediaHtml = `<img src="${p.image}" class="post-media">`;
+                if(p.video) mediaHtml = `<video src="${p.video}" controls class="post-media"></video>`;
+                container.innerHTML += `<div class="post-card"><div class="post-header"><div class="post-avatar">${user.avatarImg ? `<img src="${user.avatarImg}" style="width:100%; height:100%; object-fit:cover">` : user.avatar}</div><div><div class="post-user">${user.name} ${getGenderIcon(user.gender)} ${user.isPremium ? '⭐' : ''}</div><div class="post-username">${user.username} · ${p.time} <span style="font-size:10px">👁️ ${p.views}</span></div></div></div><div class="post-content">${p.text}</div>${mediaHtml}${p.music ? `<div class="post-music">🎵 ${p.music}</div>` : ''}<div class="post-actions"><button class="action-btn" onclick="likePost(${p.id})">❤️ ${p.likes}</button><button class="action-btn">💬 ${p.comments}</button></div></div>`;
+            }
+        });
+    }
+    
+    function likePost(id) { let post = posts.find(p => p.id === id); if(post) { post.likes++; post.views++; saveData(); } renderFeed(); }
+    
+    function renderSearch() {
+        let q = document.getElementById('searchInput')?.value.toLowerCase() || '';
+        let results = document.getElementById('searchResults');
+        let filtered = users.filter(u => u.id !== currentUser?.id);
+        if(q) filtered = filtered.filter(u => u.name.toLowerCase().includes(q));
+        results.innerHTML = filtered.map(u => `<div class="suggested-user" style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #1e2a5e"><div style="display:flex; gap:10px"><div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#3b82f6,#a855f7); display:flex; align-items:center; justify-content:center; font-weight:bold; overflow:hidden">${u.avatarImg ? `<img src="${u.avatarImg}" style="width:100%; height:100%; object-fit:cover">` : u.avatar}</div><div><strong>${u.name} ${getGenderIcon(u.gender)}</strong><br>${u.username}</div></div><button class="follow-btn" style="background:#3b82f6; border:none; border-radius:18px; padding:5px 16px; color:white" onclick="followUser(${u.id})">Follow</button></div>`).join('');
+    }
+    
+    function followUser(id) { alert("Followed!"); }
+    
+    function renderChatUsers() {
+        let container = document.getElementById('chatUsersList');
+        let otherUsers = users.filter(u => u.id !== currentUser?.id);
+        if(otherUsers.length === 0) { container.innerHTML = '<div style="color:#888; text-align:center; padding:20px">No other users yet</div>'; return; }
+        container.innerHTML = '';
+        otherUsers.forEach(u => {
+            let lastChat = chats.find(c => (c.fromId === u.id && c.toId === currentUser.id) || (c.fromId === currentUser.id && c.toId === u.id));
+            container.innerHTML += `<div class="chat-user" onclick="openChat(${u.id})"><div style="display:flex; gap:10px"><div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#3b82f6,#a855f7); display:flex; align-items:center; justify-content:center; overflow:hidden">${u.avatarImg ? `<img src="${u.avatarImg}" style="width:100%; height:100%; object-fit:cover">` : u.avatar}</div><div><strong>${u.name} ${getGenderIcon(u.gender)}</strong><div class="chat-preview">${lastChat ? (lastChat.text || '📎 Media') : 'Tap to chat'}</div></div></div><div class="chat-time">${lastChat ? lastChat.time : ''}</div></div>`;
+        });
+    }
+    
+    function openChat(id) {
+        activeChat = getUser(id);
+        document.getElementById('chatUsersList').style.display = 'none';
+        document.getElementById('chatArea').style.display = 'block';
+        document.getElementById('chatUserName').innerHTML = `${activeChat.name} ${getGenderIcon(activeChat.gender)}`;
+        updateMsgLimitAlert();
+        renderChatMessages();
+    }
+    
+    function closeChat() { activeChat = null; document.getElementById('chatUsersList').style.display = 'block'; document.getElementById('chatArea').style.display = 'none'; renderChatUsers(); }
+    
+    function renderChatMessages() {
+        let container = document.getElementById('chatMessages');
+        let msgs = chats.filter(c => (c.fromId === currentUser.id && c.toId === activeChat.id) || (c.fromId === activeChat.id && c.toId === currentUser.id));
+        if(msgs.length === 0) { container.innerHTML = '<div style="text-align:center; color:#888; padding:20px">No messages yet</div>'; return; }
+        container.innerHTML = '';
+        msgs.forEach(m => {
+            let sender = getUser(m.fromId);
+            container.innerHTML += `<div class="chat-bubble ${m.fromId === currentUser.id ? 'me' : 'other'}"><strong>${sender.name} ${getGenderIcon(sender.gender)}</strong><br>${m.text}<br><span style="font-size:10px">${m.time}</span></div>`;
+        });
+        container.scrollTop = container.scrollHeight;
+    }
+    
+    function sendChatMsg() {
+        let text = document.getElementById('chatInput').value.trim();
+        if(!text) return;
+        if(!canSendMessage()) { alert(`⚠️ Free limit of ${FREE_MSG_LIMIT} messages reached! Upgrade to Premium.`); showPage('subscriptionPage'); return; }
+        chats.push({ id: Date.now(), fromId: currentUser.id, toId: activeChat.id, text: text, time: new Date().toLocaleTimeString() });
+        incrementMsgCount();
+        document.getElementById('chatInput').value = '';
+        saveData();
+        renderChatMessages();
+        updateMsgLimitAlert();
+    }
+    
+    function renderProfile() {
+        if(!currentUser) return;
+        let myPosts = posts.filter(p => p.userId === currentUser.id);
+        let remaining = FREE_MSG_LIMIT - currentUser.msgCount;
+        document.getElementById('profileContent').innerHTML = `
+            <div class="profile-header">
+                <div class="profile-avatar-large" onclick="openEditProfile()">
+                    ${currentUser.avatarImg ? `<img src="${currentUser.avatarImg}" style="width:100%; height:100%; object-fit:cover">` : currentUser.avatar}
+                    <div style="position:absolute; bottom:0; right:0; background:#3b82f6; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:14px">📷</div>
+                </div>
+                <h2>${currentUser.name} ${getGenderIcon(currentUser.gender)} ${currentUser.isPremium ? '⭐' : ''}</h2>
+                <div>${currentUser.username}</div>
+                <div class="profile-bio">${currentUser.bio || 'No bio yet'}</div>
+                ${!currentUser.isPremium ? `<div style="color:#8b9bcf; font-size:12px; margin:5px 0">📨 ${remaining} free messages left (out of ${FREE_MSG_LIMIT})</div>` : '<div style="color:#10b981; font-size:12px">⭐ Premium: Unlimited messages</div>'}
+                <div class="profile-stats">
+                    <div><div class="stat-number">${currentUser.followers}</div><div class="stat-label">Followers</div></div>
+                    <div><div class="stat-number">${currentUser.following}</div><div class="stat-label">Following</div></div>
+                    <div><div class="stat-number">${myPosts.length}</div><div class="stat-label">Posts</div></div>
+                </div>
+                <div>
+                    <button class="edit-profile-btn" onclick="openEditProfile()">✏️ Edit Profile</button>
+                    <button class="settings-btn" onclick="openSettingsModal()">⚙️ Settings</button>
+                </div>
+            </div>
+            <div style="margin-top:15px"><h3>📸 My Posts (${myPosts.length})</h3>${myPosts.length === 0 ? '<p>No posts yet</p>' : myPosts.map(p => `<div style="background:#0f1438; border-radius:14px; padding:10px; margin-bottom:10px"><div>${p.text}</div><div style="font-size:10px">❤️ ${p.likes} 👁️ ${p.views}</div></div>`).join('')}</div>
+        `;
+    }
+    
+    // Auth Functions
+    function doLogin() {
+        let email = document.getElementById('loginEmail').value;
+        let pwd = document.getElementById('loginPassword').value;
+        let user = users.find(u => u.email === email && u.password === pwd);
+        if(user) {
+            currentUser = user;
+            saveData();
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('bottomNav').style.display = 'flex';
+            renderFeed(); renderStories(); renderSearch(); renderChatUsers(); renderProfile(); renderRooms();
+            showPage('homePage');
+        } else { document.getElementById('loginError').innerHTML = '❌ Wrong password!'; }
+    }
+    
+    function showSignup() { document.getElementById('loginPage').style.display = 'none'; document.getElementById('signupPage').style.display = 'flex'; }
+    function showLogin() { document.getElementById('signupPage').style.display = 'none'; document.getElementById('loginPage').style.display = 'flex'; }
+    
+    function doSignup() {
+        let name = document.getElementById('signupName').value;
+        let email = document.getElementById('signupEmail').value;
+        let pwd = document.getElementById('signupPassword').value;
+        let gender = document.getElementById('signupGender').value;
+        if(!name || !email || !pwd) { document.getElementById('signupError').innerHTML = '❌ All fields!'; return; }
+        if(pwd.length < 3) { document.getElementById('signupError').innerHTML = '❌ Password too short!'; return; }
+        if(users.find(u => u.email === email)) { document.getElementById('signupError').innerHTML = '❌ Email exists!'; return; }
+        let newUser = { id: users.length+1, name, username: '@'+name.toLowerCase().replace(/\s/g,''), email, password: pwd, avatar: name.charAt(0).toUpperCase(), avatarImg: null, bio: "New to TalkMate! 🎉", gender, followers: 0, following: 0, isPremium: false, premiumExpiry: null, msgCount: 0 };
+        users.push(newUser);
+        saveData();
+        document.getElementById('signupSuccess').innerHTML = '✅ Account created! Please login.';
+        setTimeout(() => showLogin(), 1500);
+    }
+    
+    function logout() { currentUser = null; localStorage.removeItem('talkmate_current'); document.getElementById('mainApp').style.display = 'none'; document.getElementById('bottomNav').style.display = 'none'; showLogin(); }
+    
+    function showPage(id) {
+        document.querySelectorAll('#mainApp .page').forEach(p => p.classList.remove('active-page'));
+        document.getElementById(id).classList.add('active-page');
+        if(id === 'searchPage') renderSearch();
+        if(id === 'chatPage') { renderChatUsers(); closeChat(); }
+        if(id === 'roomsPage') renderRooms();
+        if(id === 'profilePage') renderProfile();
+        if(id === 'homePage') { renderFeed(); renderStories(); }
+    }
+    
+    document.getElementById('postPhoto').onchange = function(e) { previewPostMedia(e.target, 'photo'); };
+    document.getElementById('postVideo').onchange = function(e) { previewPostMedia(e.target, 'video'); };
+    document.getElementById('postMusicInput').onchange = previewPostMusic;
+    document.getElementById('searchInput')?.addEventListener('input', renderSearch);
+    
+    loadData();
+    let saved = localStorage.getItem('talkmate_current');
+    if(saved) {
+        currentUser = JSON.parse(saved);
+        if(users.find(u => u.id === currentUser.id)) {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('bottomNav').style.display = 'flex';
+            renderFeed(); renderStories(); renderSearch(); renderChatUsers(); renderProfile(); renderRooms();
+            showPage('homePage');
+        }
+    }
+</script>
+</body>
+</html>
